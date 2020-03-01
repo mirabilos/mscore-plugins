@@ -3,3 +3,15 @@
 └────────────────────────────────┘
 
 Use at your own discretion / risk and see inside the files for the licence.
+
+• notenames-as-lyrics.qml
+
+  Not yet completed. It needs features that apparently were implemented
+  in MuseScore 3.3 and later (which I did not upgrade to yet).
+
+• notenames-as-stafftext.qml
+
+  Write note names in SPN below each note/chord.
+  Implemented by request from Mmike (Mario Splivalo) in IRC.
+
+Enjoy!
