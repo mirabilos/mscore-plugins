@@ -24,4 +24,13 @@ Use at your own discretion / risk and see inside the files for the licence.
 
   ‣ https://musescore.org/en/project/name-notes
 
+• show-ticks.qml
+
+  Display an alert box with the ticks position of the currently selected
+  elements. It uses both the MuseScore 3.3+ selected elements API (also
+  in 3.2.3+dfsg2-8 in Debian) and the cursor range selection which is
+  assumed to terminate one tick before the next segment begins.
+
+  ‣ https://musescore.org/en/project/show-ticks
+
 Enjoy!
