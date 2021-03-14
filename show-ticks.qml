@@ -27,7 +27,7 @@ import QtQuick.Dialogs 1.2
 MuseScore {
 	description: "This plugin shows the ticks of the current selection";
 	requiresScore: true;
-	version: "1";
+	version: "2";
 	menuPath: "Plugins.Show ticks";
 
 	MessageDialog {
@@ -69,7 +69,7 @@ MuseScore {
 					continue;
 				}
 				console.log("#" + idx + " at " + e.tick);
-				if (e.tick <= seen) {
+				if (e.tick < seen) {
 					console.log("below " + seen + ", ignoring");
 					continue;
 				}
