@@ -381,7 +381,6 @@ MuseScore {
 			return;
 
 		var text = newElement(Element.STAFF_TEXT);
-		text.parent = cursor.element;
 		text.text = "";
 		var notes = cursor.element.notes;
 		var sep = "";

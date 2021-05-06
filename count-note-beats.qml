@@ -360,7 +360,6 @@ MuseScore {
 		}
 
 		var text = newElement(Element.STAFF_TEXT);
-		text.parent = cursor.element;
 		text.text = "" + b;
 
 		if (text.text == "")
