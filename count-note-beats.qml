@@ -28,8 +28,8 @@
 import MuseScore 3.0
 
 MuseScore {
-	description: "This plugin inserts beat numbers as staff text. First voice only.";
-	version: "0";
+	description: "This plugin inserts beat numbers as staff text.";
+	version: "1";
 	menuPath: "Plugins.Notes.Count note beats";
 
 	function buildMeasureMap(score) {
@@ -330,30 +330,35 @@ MuseScore {
 		}
 
 		for (var stave = staveBeg; stave <= staveEnd; ++stave) {
-			cursor.staffIdx = stave;
-			cursor.voice = 0;
-			cursor.rewind(rewindMode);
-			/*XXX https://musescore.org/en/node/301846 */
-			cursor.staffIdx = stave;
-			cursor.voice = 0;
+			for (var voice = 0; voice < 4; ++voice) {
+				cursor.staffIdx = stave;
+				cursor.voice = voice;
+				cursor.rewind(rewindMode);
+				/*XXX https://musescore.org/en/node/301846 */
+				cursor.staffIdx = stave;
+				cursor.voice = voice;
 
-			while (cursor.segment &&
-			    (toEOF || cursor.tick < tickEnd)) {
-				if (cursor.element)
-					cb.apply(null,
-					    [cursor].concat(args));
-				cursor.next();
+				while (cursor.segment &&
+				    (toEOF || cursor.tick < tickEnd)) {
+					if (cursor.element)
+						cb.apply(null,
+						    [cursor].concat(args));
+					cursor.next();
+				}
 			}
 		}
 	}
 
-	function labelBeat(cursor, measureMap) {
+	function labelBeat(cursor, measureMap, doneMap) {
 		//console.log(showPos(cursor, measureMap) + ": " +
 		//    nameElementType(cursor.element.type));
 		if (cursor.element.type !== Element.CHORD)
 			return;
 
 		var t = cursor.segment.tick;
+		if (doneMap[t])
+			return;
+		doneMap[t] = true;
 		var m = measureMap[cursor.measure.firstSegment.tick];
 		var b = "?";
 		if (m && t >= m.tick && t < m.past) {
@@ -371,7 +376,8 @@ MuseScore {
 
 	onRun: {
 		var measureMap = buildMeasureMap(curScore);
-		applyToSelectionOrScore(labelBeat, measureMap);
+		var doneMap = {};
+		applyToSelectionOrScore(labelBeat, measureMap, doneMap);
 
 		Qt.quit();
 	}

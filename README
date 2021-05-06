@@ -6,7 +6,7 @@ Use at your own discretion / risk and see inside the files for the licence.
 
 • count-note-beats.qml
 
-  Write beats atop every note in voice 1.
+  Write beats atop every note.
   Implemented by request from Phillip Duke in the 2020-09-23 MuseScore Café.
 
   ‣ https://musescore.org/en/project/count-notes-beats-each-measure
