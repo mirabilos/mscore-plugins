@@ -1,5 +1,5 @@
 /*-
- * Copyright © 2020, 2021
+ * Copyright © 2020
  *	mirabilos <m@mirbsd.org>
  *
  * Provided that these terms and disclaimer and all copyright notices
@@ -292,9 +292,7 @@ MuseScore {
 		}
 	}
 
-	/** signature: applyToSelectionOrScore(cb, ...args) */
-	function applyToSelectionOrScore(cb) {
-		var args = Array.prototype.slice.call(arguments, 1);
+	function applyToSelectionOrScore(cb, ...args) {
 		var staveBeg;
 		var staveEnd;
 		var tickEnd;
@@ -339,7 +337,7 @@ MuseScore {
 				while (cursor.segment &&
 				    (toEOF || cursor.tick < tickEnd)) {
 					if (cursor.element)
-						cb(cursor, args);
+						cb(cursor, ...args);
 					cursor.next();
 				}
 			}
