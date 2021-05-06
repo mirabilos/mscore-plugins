@@ -20,8 +20,6 @@ Use at your own discretion / risk and see inside the files for the licence.
 
   ‣ https://musescore.org/en/project/name-notes
 
-  Requires MuseScore 3.3 or Debian musescore3 (>= 3.2.3+dfsg2-9~)
-
 • notenames-as-stafftext.qml
 
   Same as notenames-as-lyrics.qml (see above) but as staff text.

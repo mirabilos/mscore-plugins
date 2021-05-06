@@ -17,8 +17,7 @@
  * damage or existence of a defect, except proven that it results out
  * of said person’s immediate fault when using the work as intended.
  *-
- * Name notes of chords as lyrics in voice order. 3.3 or up required,
- * or 3.2.3+dfsg2-9 (Debian).
+ * Name notes of chords as lyrics in voice order.
  *
  * Makes use of some techniques demonstrated by the MuseScore example
  * plugins. No copyright is claimed for these or the API extracts.
@@ -28,7 +27,7 @@ import MuseScore 3.0
 
 MuseScore {
 	description: "This plugin inserts the names of the notes in the chords, by voice, as lyrics.";
-	version: "0";
+	version: "1";
 	menuPath: "Plugins.Notes.Note Names as Lyrics";
 
 	function buildMeasureMap(score) {
@@ -407,7 +406,7 @@ MuseScore {
 
 	onRun: {
 		var measureMap = buildMeasureMap(curScore);
-		if (mscoreMajorVersion > 3 || mscoreMinorVersion >= 3)
+		if (removeElement)
 			applyToSelectionOrScore(dropLyrics, measureMap);
 		applyToSelectionOrScore(nameNotes, measureMap);
 

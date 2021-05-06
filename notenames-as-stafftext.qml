@@ -27,7 +27,7 @@ import MuseScore 3.0
 
 MuseScore {
 	description: "This plugin inserts the names of the notes in the chords, by voice, as staff text.";
-	version: "0";
+	version: "1";
 	menuPath: "Plugins.Notes.Note Names as Staff Text";
 
 	function buildMeasureMap(score) {
@@ -402,7 +402,7 @@ MuseScore {
 
 	onRun: {
 		var measureMap = buildMeasureMap(curScore);
-		if (mscoreMajorVersion > 3 || mscoreMinorVersion >= 3)
+		if (removeElement)
 			applyToSelectionOrScore(dropLyrics, measureMap);
 		applyToSelectionOrScore(nameNotes, measureMap);
 
