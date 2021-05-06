@@ -25,7 +25,8 @@ Use at your own discretion / risk and see inside the files for the licence.
 • notenames-as-stafftext.qml
 
   Same as notenames-as-lyrics.qml (see above) but as staff text.
-  Should work with MuseScore 3.2 as well.
+  Should work with MuseScore 3.2 as well but if you can, use the
+  other implementation, as autoplace is tricky here…
 
 • show-ticks.qml
 

@@ -392,6 +392,7 @@ MuseScore {
 		if (text.text == "")
 			return;
 		text.placement = Placement.BELOW;
+		text.autoplace = false;
 		for (var verse = 0; verse < cursor.voice; ++verse)
 			text.text = '\n' + text.text;
 		//console.log(showPos(cursor, measureMap) + ": add verse(" +
