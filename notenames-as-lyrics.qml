@@ -17,7 +17,8 @@
  * damage or existence of a defect, except proven that it results out
  * of said person’s immediate fault when using the work as intended.
  *-
- * Name notes of chords as lyrics in voice order.
+ * Name notes of chords as lyrics in voice order. 3.3 or up required,
+ * or 3.2.3+dfsg2-9 (Debian).
  *
  * Makes use of some techniques demonstrated by the MuseScore example
  * plugins. No copyright is claimed for these or the API extracts.
@@ -401,8 +402,6 @@ MuseScore {
 		text.verse = cursor.voice;
 		//console.log(showPos(cursor, measureMap) + ": add verse(" +
 		//    (text.verse + 1) + ")=" + text.text);
-//		cursor.add(text);
-//		cursor.element.lyrics.push(text);
 		cursor.element.add(text);
 	}
 

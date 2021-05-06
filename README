@@ -14,21 +14,24 @@ Use at your own discretion / risk and see inside the files for the licence.
 
 • notenames-as-lyrics.qml
 
-  Not yet completed. It needs features that apparently were implemented
-  in MuseScore 3.3 and later (which I did not upgrade to yet).
-
-• notenames-as-stafftext.qml
-
-  Write note names in SPN below each note/chord.
+  Write note names in SPN below each note/chord. Here, as lyrics,
+  with the lyrics verse corresponding to the voice number.
   Implemented by request from Mmike (Mario Splivalo) in IRC.
 
   ‣ https://musescore.org/en/project/name-notes
+
+  Requires MuseScore 3.3 or Debian musescore3 (>= 3.2.3+dfsg2-9~)
+
+• notenames-as-stafftext.qml
+
+  Same as notenames-as-lyrics.qml (see above) but as staff text.
+  Should work with MuseScore 3.2 as well.
 
 • show-ticks.qml
 
   Display an alert box with the ticks position of the currently selected
   elements. It uses both the MuseScore 3.3+ selected elements API (also
-  in 3.2.3+dfsg2-8 in Debian) and the cursor range selection which is
+  in 3.2.3+dfsg2-9 in Debian) and the cursor range selection which is
   assumed to terminate one tick before the next segment begins.
 
   ‣ https://musescore.org/en/project/show-ticks
