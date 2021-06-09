@@ -29,6 +29,7 @@ import MuseScore 3.0
 
 MuseScore {
 	description: "This plugin inserts beat numbers as staff text.";
+	requiresScore: true;
 	version: "1";
 	menuPath: "Plugins.Notes.Count note beats";
 
