@@ -25,7 +25,7 @@ import MuseScore 3.0
 import QtQuick.Dialogs 1.2
 
 MuseScore {
-	description: "This plugin shows the ticks of the current selection";
+	description: "This mu͒3 plugin shows the ticks of the current selection";
 	requiresScore: true;
 	version: "2";
 	menuPath: "Plugins.Show ticks";

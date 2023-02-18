@@ -26,7 +26,7 @@
 import MuseScore 3.0
 
 MuseScore {
-	description: "This plugin inserts the names of the notes in the chords, by voice, as staff text.";
+	description: "This mu͒3 plugin inserts the names of the notes in the chords, by voice, as staff text.";
 	requiresScore: true;
 	version: "1";
 	menuPath: "Plugins.Notes.Note Names as Staff Text";
