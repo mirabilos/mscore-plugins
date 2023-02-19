@@ -25,13 +25,21 @@
  * plugins. No copyright is claimed for these or the API extracts.
  */
 
+import QtQuick 2.0
 import MuseScore 3.0
 
 MuseScore {
 	description: "This mu͒3 plugin inserts beat numbers as staff text.";
 	requiresScore: true;
-	version: "1";
+	version: "2";
 	menuPath: "Plugins.Notes.Count note beats";
+
+	id: countNoteBeats
+	Component.onCompleted : {
+		if (mscoreMajorVersion >= 4) {
+ 			countNoteBeats.title = "Count note beats";
+		}
+	}
 
 	function buildMeasureMap(score) {
 		var map = {};
@@ -304,6 +312,7 @@ MuseScore {
 		var rewindMode;
 		var toEOF;
 
+		curScore.startCmd();
 		var cursor = curScore.newCursor();
 		cursor.rewind(Cursor.SELECTION_START);
 		if (cursor.segment) {
@@ -348,6 +357,7 @@ MuseScore {
 				}
 			}
 		}
+		curScore.endCmd();
 	}
 
 	function labelBeat(cursor, measureMap, doneMap) {
@@ -380,6 +390,6 @@ MuseScore {
 		var doneMap = {};
 		applyToSelectionOrScore(labelBeat, measureMap, doneMap);
 
-		Qt.quit();
+		quit();
 	}
 }
