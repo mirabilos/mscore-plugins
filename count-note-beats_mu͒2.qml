@@ -392,13 +392,13 @@ MuseScore {
 			return;
 		doneMap[t] = true;
 		var m = measureMap[cursor.measure.firstSegment.tick];
-		var b = "?";
-		if (m && t >= m.tick && t < m.past) {
-			b = 1 + (t - m.tick) / m.ticksB;
-		}
-
 		var text = newElement(Element.STAFF_TEXT);
-		text.text = "" + b;
+		if (m && t >= m.tick && t < m.past) {
+			var b = 1 + (t - m.tick) / m.ticksB;
+			text.text = "" + b;
+		} else {
+			text.text = "?";
+		}
 
 		if (text.text == "")
 			return;
