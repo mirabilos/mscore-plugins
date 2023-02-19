@@ -33,14 +33,14 @@ import MuseScore 1.0
 
 MuseScore {
 	description: "This mu͒2 plugin inserts beat numbers as staff text.";
-	version: "1";
+	version: "2";
 	menuPath: "Plugins.Notes.Count note beats";
 
 	function buildMeasureMap(score) {
 		var map = {};
 		var no = 1;
 		var cursor = score.newCursor();
-		cursor.rewind(Cursor.SCORE_START);
+		cursor.rewind(0);
 		var lastTS = null;
 		while (cursor.measure) {
 			var m = cursor.measure;
@@ -336,10 +336,10 @@ MuseScore {
 		var toEOF;
 
 		var cursor = curScore.newCursor();
-		cursor.rewind(Cursor.SELECTION_START);
+		cursor.rewind(1);
 		if (cursor.segment) {
 			staveBeg = cursor.staffIdx;
-			cursor.rewind(Cursor.SELECTION_END);
+			cursor.rewind(2);
 			staveEnd = cursor.staffIdx;
 			if (!cursor.tick) {
 				/*
@@ -352,13 +352,13 @@ MuseScore {
 				toEOF = false;
 				tickEnd = cursor.tick;
 			}
-			rewindMode = Cursor.SELECTION_START;
+			rewindMode = 1;
 		} else {
 			/* no selection */
 			staveBeg = 0;
 			staveEnd = curScore.nstaves - 1;
 			toEOF = true;
-			rewindMode = Cursor.SCORE_START;
+			rewindMode = 0;
 		}
 
 		for (var stave = staveBeg; stave <= staveEnd; ++stave) {
