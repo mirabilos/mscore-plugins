@@ -27,7 +27,7 @@ import MuseScore 3.0
 import QtQuick 2.0
 
 MuseScore {
-	description: "This mu͒3 plugin inserts the names of the notes in the chords, by voice, as lyrics.";
+	description: "This mu͒3/mu͒4 plugin inserts the names of the notes in the chords, by voice, as lyrics.";
 	requiresScore: true;
 	version: "2";
 	menuPath: "Plugins.Notes.Note Names as Lyrics";
