@@ -29,7 +29,7 @@ import QtQuick 2.0
 MuseScore {
 	description: "This mu͒3/mu͒4 plugin inserts the names of the notes in the chords, by voice, as staff text.";
 	requiresScore: true;
-	version: "2";
+	version: "3";
 	menuPath: "Plugins.Notes.Note Names as Staff Text";
 
 	id: notenamesAsStafftext
@@ -418,7 +418,5 @@ MuseScore {
 			applyToSelectionOrScore(dropLyrics, measureMap);
 		applyToSelectionOrScore(nameNotes, measureMap);
 		curScore.endCmd();
-
-		(typeof(quit) === 'undefined' ? Qt.quit : quit)();
 	}
 }

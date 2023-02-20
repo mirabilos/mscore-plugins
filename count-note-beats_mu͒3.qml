@@ -31,7 +31,7 @@ import QtQuick 2.0
 MuseScore {
 	description: "This mu͒3/mu͒4 plugin inserts beat numbers as staff text.";
 	requiresScore: true;
-	version: "3";
+	version: "4";
 	menuPath: "Plugins.Notes.Count note beats";
 
 	id: countNoteBeats
@@ -391,7 +391,5 @@ MuseScore {
 		curScore.startCmd();
 		applyToSelectionOrScore(labelBeat, measureMap, doneMap);
 		curScore.endCmd();
-
-		(typeof(quit) === 'undefined' ? Qt.quit : quit)();
 	}
 }
