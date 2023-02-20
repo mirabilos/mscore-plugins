@@ -37,7 +37,7 @@ MuseScore {
 	id: countNoteBeats
 	Component.onCompleted : {
 		if (mscoreMajorVersion >= 4) {
- 			countNoteBeats.title = "Count note beats";
+			countNoteBeats.title = "Count note beats";
 		}
 	}
 
