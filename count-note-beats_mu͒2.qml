@@ -33,7 +33,7 @@ import MuseScore 1.0
 
 MuseScore {
 	description: "This mu͒2 plugin inserts beat numbers as staff text.";
-	version: "2";
+	version: "3";
 	menuPath: "Plugins.Notes.Count note beats";
 
 	function buildMeasureMap(score) {
@@ -51,7 +51,7 @@ MuseScore {
 				if (s.segmentType === Segment.ChordRest)
 					break;
 				if (s.segmentType === Segment.All)
-					throw "Segment.All found";
+					throw new Error("Segment.All found");
 				if (s.segmentType !== Segment.TimeSig) {
 					s = s.nextInMeasure;
 					continue;
@@ -68,10 +68,8 @@ MuseScore {
 			}
 			if (thisTS !== null)
 				lastTS = thisTS;
-			if (lastTS === null) {
-				console.log("ERROR: no time signature for m." + no);
-				Qt.quit();
-			}
+			if (lastTS === null)
+				throw new Error("ERROR: no time signature for m." + no);
 			var tsD = lastTS[0];
 			var tsN = lastTS[1];
 			var ticksB = division * 4.0 / tsD;
@@ -410,7 +408,5 @@ MuseScore {
 		var measureMap = buildMeasureMap(curScore);
 		var doneMap = {};
 		applyToSelectionOrScore(labelBeat, measureMap, doneMap);
-
-		Qt.quit();
 	}
 }
