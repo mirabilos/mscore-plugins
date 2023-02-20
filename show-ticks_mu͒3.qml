@@ -33,6 +33,7 @@ MuseScore {
 
 	id: showTicks
 	Component.onCompleted: {
+		// runs once before console.log is ready
 		if (mscoreMajorVersion >= 4) {
 			showTicks.title = "Show ticks";
 		}

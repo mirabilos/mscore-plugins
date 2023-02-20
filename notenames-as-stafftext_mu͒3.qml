@@ -34,6 +34,7 @@ MuseScore {
 
 	id: notenamesAsStafftext
 	Component.onCompleted: {
+		// runs once before console.log is ready
 		if (mscoreMajorVersion >= 4) {
 			notenamesAsStafftext.title = "SPN note names as stafftext";
 		}

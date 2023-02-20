@@ -34,6 +34,7 @@ MuseScore {
 
 	id: notenamesAsLyrics
 	Component.onCompleted: {
+		// runs once before console.log is ready
 		if (mscoreMajorVersion >= 4) {
 			notenamesAsLyrics.title = "SPN note names as lyrics";
 		}
