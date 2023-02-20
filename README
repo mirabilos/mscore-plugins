@@ -4,8 +4,7 @@
 
 Use at your own discretion / risk and see inside the files for the licence.
 
-• count-note-beats.qml
-• count-note-beats_mu͒2.qml
+• count-note-beats_mu͒*.qml
 
   Write beats atop every note.
   Implemented by request from Phillip Duke in the 2020-09-23 MuseScore Café.
@@ -14,7 +13,7 @@ Use at your own discretion / risk and see inside the files for the licence.
   ‣ https://musescore.org/en/project/count-notes-beats-each-measure
   ‣ https://musescore.com/groups/musescore-cafe/discuss/5076457
 
-• notenames-as-lyrics.qml
+• notenames-as-lyrics_mu͒*.qml
 
   Write note names in SPN below each note/chord. Here, as lyrics,
   with the lyrics verse corresponding to the voice number.
@@ -22,13 +21,13 @@ Use at your own discretion / risk and see inside the files for the licence.
 
   ‣ https://musescore.org/en/project/name-notes
 
-• notenames-as-stafftext.qml
+• notenames-as-stafftext_mu͒*.qml
 
   Same as notenames-as-lyrics.qml (see above) but as staff text.
   Should work with MuseScore 3.2 as well but if you can, use the
   other implementation, as autoplace is tricky here…
 
-• show-ticks.qml
+• show-ticks_mu͒*.qml
 
   Display an alert box with the ticks position of the currently selected
   elements. It uses both the MuseScore 3.3+ selected elements API (also
