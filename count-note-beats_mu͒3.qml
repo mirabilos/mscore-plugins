@@ -26,12 +26,20 @@
  */
 
 import MuseScore 3.0
+import QtQuick 2.0
 
 MuseScore {
-	description: "This mu͒3 plugin inserts beat numbers as staff text.";
+	description: "This mu͒3/mu͒4 plugin inserts beat numbers as staff text.";
 	requiresScore: true;
-	version: "1";
+	version: "3";
 	menuPath: "Plugins.Notes.Count note beats";
+
+	id: countNoteBeats
+	Component.onCompleted: {
+		if (mscoreMajorVersion >= 4) {
+			countNoteBeats.title = "Count note beats";
+		}
+	}
 
 	function buildMeasureMap(score) {
 		var map = {};
@@ -378,8 +386,11 @@ MuseScore {
 	onRun: {
 		var measureMap = buildMeasureMap(curScore);
 		var doneMap = {};
-		applyToSelectionOrScore(labelBeat, measureMap, doneMap);
 
-		Qt.quit();
+		curScore.startCmd();
+		applyToSelectionOrScore(labelBeat, measureMap, doneMap);
+		curScore.endCmd();
+
+		(typeof(quit) === 'undefined' ? Qt.quit : quit)();
 	}
 }

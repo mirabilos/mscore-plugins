@@ -4,6 +4,9 @@
 
 Use at your own discretion / risk and see inside the files for the licence.
 
+The _mu͒3 files may work under Mu͒seScore 4; once tested, versions
+will be available as _mu͒4 symlink (or changed copy).
+
 • count-note-beats_mu͒*.qml
 
   Write beats atop every note.

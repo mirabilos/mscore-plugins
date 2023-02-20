@@ -22,13 +22,21 @@
  */
 
 import MuseScore 3.0
+import QtQuick 2.0
 import QtQuick.Dialogs 1.2
 
 MuseScore {
 	description: "This mu͒3 plugin shows the ticks of the current selection";
 	requiresScore: true;
-	version: "2";
+	version: "3";
 	menuPath: "Plugins.Show ticks";
+
+	id: showTicks
+	Component.onCompleted: {
+		if (mscoreMajorVersion >= 4) {
+			showTicks.title = "Show ticks";
+		}
+	}
 
 	MessageDialog {
 		id: alert;
