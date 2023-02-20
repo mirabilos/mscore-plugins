@@ -390,6 +390,6 @@ MuseScore {
 		var doneMap = {};
 		applyToSelectionOrScore(labelBeat, measureMap, doneMap);
 
-		quit();
+		(typeof(quit) === 'undefined' ? Qt.quit : quit)();
 	}
 }
