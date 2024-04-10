@@ -16,6 +16,10 @@ will be available as _mu͒4 symlink (or changed copy).
   ‣ https://musescore.org/en/project/count-notes-beats-each-measure
   ‣ https://musescore.com/groups/musescore-cafe/discuss/5076457
 
+• export-location-info.qml
+
+  Prototype, not yet ready for public consumption.
+
 • notenames-as-lyrics_mu͒*.qml
 
   Write note names in SPN below each note/chord. Here, as lyrics,
