@@ -17,9 +17,8 @@
  * damage or existence of a defect, except proven that it results out
  * of said person’s immediate fault when using the work as intended.
  *-
- * Number notes’ beats. Note that short measures could be aligned any
- * conceivable way (beginning, end, middle) so we assume beginning as
- * MuseScore doesn’t record short measure alignment.
+ * Number notes’ beats. Note Measure::el() is not exposed to plugins,
+ * so section breaks cannot be discovered or handled.
  *
  * Makes use of some techniques demonstrated by the MuseScore example
  * plugins. No copyright is claimed for these or the API extracts.
