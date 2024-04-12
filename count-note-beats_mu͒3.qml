@@ -74,6 +74,9 @@ MuseScore {
 				"past" : (tick + ticksM),
 				"no": no
 			};
+			if (tick == 0 && m.timesigNominal.numerator != tsN &&
+			    m.timesigNominal.denominator == tsD)
+				cur["auftakt"] = m.timesigNominal.numerator - tsN;
 			map[cur.tick] = cur;
 			console.log(tsN + "/" + tsD + " measure " + no +
 			    " at tick " + cur.tick + " length " + ticksM);
@@ -381,7 +384,8 @@ MuseScore {
 		var m = measureMap[cursor.measure.firstSegment.tick];
 		var text = newElement(Element.STAFF_TEXT);
 		if (m && t >= m.tick && t < m.past) {
-			var b = 1 + (t - m.tick) / m.ticksB;
+			var b = 1 + (t - m.tick) / m.ticksB +
+			    (m.auftakt || 0);
 			text.text = "" + b;
 		} else {
 			text.text = "?";
