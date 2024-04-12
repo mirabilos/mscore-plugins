@@ -51,7 +51,7 @@ MuseScore {
 
 	function buildMeasureMap(score) {
 		var map = {};
-		var no = 1;
+		var no = 0;
 		var cursor = score.newCursor();
 		cursor.rewind(Cursor.SCORE_START);
 		while (cursor.measure) {
@@ -61,7 +61,7 @@ MuseScore {
 			var tsN = m.timesigActual.numerator;
 			var ticksB = division * 4.0 / tsD;
 			var ticksM = ticksB * tsN;
-			no += m.noOffset;
+			no += m.noOffset + (m.irregular ? 0 : 1);
 			var cur = {
 				"tick": tick,
 				"tsD": tsD,
@@ -78,8 +78,6 @@ MuseScore {
 			map[cur.tick] = cur;
 			console.log(tsN + "/" + tsD + " measure " + no +
 			    " at tick " + cur.tick + " length " + ticksM);
-			if (!m.irregular)
-				++no;
 			cursor.nextMeasure();
 		}
 		dbgfile.write(JSON.stringify(map));
