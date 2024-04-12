@@ -1,5 +1,5 @@
 /*-
- * Copyright © 2020, 2021
+ * Copyright © 2020, 2021, 2024
  *	mirabilos <m@mirbsd.org>
  *
  * Provided that these terms and disclaimer and all copyright notices
@@ -27,11 +27,12 @@
 
 import MuseScore 3.0
 import QtQuick 2.0
+import FileIO 3.0
 
 MuseScore {
 	description: "This mu͒3/mu͒4 plugin inserts beat numbers as staff text.";
 	requiresScore: true;
-	version: "4";
+	version: "4+dev";
 	menuPath: "Plugins.Notes.Count note beats";
 
 	id: countNoteBeats
@@ -40,6 +41,12 @@ MuseScore {
 		if (mscoreMajorVersion >= 4) {
 			countNoteBeats.title = "Count note beats";
 		}
+	}
+
+	FileIO {
+		id: dbgfile
+		source: tempPath() + "/mscplgin.txt"
+		onError: console.log("E: FileIO(" + dbgfile.source + "): " + msg)
 	}
 
 	function buildMeasureMap(score) {
@@ -59,6 +66,10 @@ MuseScore {
 				"tick": tick,
 				"tsD": tsD,
 				"tsN": tsN,
+"irr": m.irregular,
+"noff": m.noOffset,
+"tsND": m.timesigNominal.denominator,
+"tsNN": m.timesigNominal.numerator,
 				"ticksB": ticksB,
 				"ticksM": ticksM,
 				"past" : (tick + ticksM),
@@ -71,6 +82,7 @@ MuseScore {
 				++no;
 			cursor.nextMeasure();
 		}
+		dbgfile.write(JSON.stringify(map));
 		return map;
 	}
 
@@ -380,7 +392,8 @@ MuseScore {
 
 		if (text.text == "")
 			return;
-		text.placement = Placement.ABOVE;
+text.text = 'm' + m.no + '/' + text.text;
+		text.placement = Placement.BELOW; //ABOVE;
 		cursor.add(text);
 	}
 
