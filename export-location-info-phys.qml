@@ -17,9 +17,9 @@
  * damage or existence of a defect, except proven that it results out
  * of said person’s immediate fault when using the work as intended.
  *-
- * Generate score location information, correlate with audio timing
- * information, export as structured text file named the basename of
- * the score plus “.locinfo”.
+ * Generate audio timing / score position correlation information and
+ * save as “.locinfo.jsn” file. This version uses “physical” location
+ * (measures as they are saved in the XML).
  *
  * Makes use of some techniques demonstrated by the MuseScore example
  * plugins. No copyright is claimed for these or the API extracts.
@@ -31,17 +31,24 @@ import QtQuick.Dialogs 1.2
 import FileIO 3.0
 
 MuseScore {
-	description: "This mu͒3 plugin exports score location information.";
+	description: "This mu͒3 plugin exports score location timing information.";
 	requiresScore: true;
-	version: "0";
-	menuPath: "Plugins.Export location info";
+	version: "1";
+	menuPath: "Plugins.Export location info (phys)";
 
-	id: exportLocationInfo
+	id: exportLocationInfoPhys
 	Component.onCompleted: {
 		// runs once before console.log is ready
 		if (mscoreMajorVersion >= 4) {
-			countNoteBeats.title = "Export location info";
+			exportLocationInfoPhys.title = "Export location info (phys)";
 		}
+	}
+
+	MessageDialog {
+		id: resultBox
+		title: "Export location info (phys) result"
+		icon: StandardIcon.Critical
+		text: "An error occurred. Check console.log for more detail"
 	}
 
 	FileIO {
@@ -50,23 +57,23 @@ MuseScore {
 	}
 
 	FileDialog {
-		id: fileDialog
-		title: "Please choose where to save the locinfo file"
+		id: fileDialogue
+		title: "Save locinfo file into…"
 		folder: "file://" + outfile.tempPath()
 		selectFolder: true
 		onAccepted: {
-			outfile.source = ("" + fileDialog.fileUrl + "/" +
-			    curScore.scoreName + ".locinfo").slice(7);
-			exportLocationInfo.analyseScore();
+			exportLocationInfoPhys.analyseScore();
+			resultBox.open();
 		}
 		onRejected: {
-			console.log("I: user cancelled");
+			console.log("I: user cancelled file dialogue");
 		}
 	}
 
 	function buildMeasureMap(score) {
 		var map = {};
-		var no = 1;
+		var mlist = [];
+		var no = 0;
 		var cursor = score.newCursor();
 		cursor.rewind(Cursor.SCORE_START);
 		while (cursor.measure) {
@@ -76,7 +83,6 @@ MuseScore {
 			var tsN = m.timesigActual.numerator;
 			var ticksB = division * 4.0 / tsD;
 			var ticksM = ticksB * tsN;
-			no += m.noOffset;
 			var cur = {
 				"tick": tick,
 				"tsD": tsD,
@@ -85,15 +91,16 @@ MuseScore {
 				"ticksM": ticksM,
 				"past" : (tick + ticksM),
 				"no": no
-			  //XXX-virtual measure for split-sameno
 			};
 			map[cur.tick] = cur;
-			console.log(tsN + "/" + tsD + " measure " + no +
-			    " at tick " + cur.tick + " length " + ticksM);
-			if (!m.irregular)
-				++no;
+			mlist.push(cur);
+			console.log("D: " + tsN + "/" + tsD + " measure #" +
+			    no + " (phys) at tick " + cur.tick +
+			    " length " + ticksM);
+			++no;
 			cursor.nextMeasure();
 		}
+		map["list"] = mlist;
 		return map;
 	}
 
@@ -331,7 +338,9 @@ MuseScore {
 	function applyToNamedScore(theScore, cb) {
 		var args = Array.prototype.slice.call(arguments, 2);
 		var cursor = theScore.newCursor();
+		args.unshift(cursor);
 		var staveEnd = theScore.nstaves - 1;
+		var rv = 0;
 
 		for (var stave = 0; stave <= staveEnd; ++stave) {
 			for (var voice = 0; voice < 4; ++voice) {
@@ -344,16 +353,33 @@ MuseScore {
 
 				while (cursor.segment) {
 					if (cursor.element)
-						cb.apply(null,
-						    [cursor].concat(args));
+						rv |= cb.apply(this, args);
 					cursor.next();
 				}
+			}
+		}
+		return (rv);
+	}
+
+	function dropStaveText(cursor, measureMap) {
+		if (cursor.element.type !== Element.CHORD)
+			return;
+
+		if (!cursor.segment.annotations)
+			return;
+		var nann = cursor.segment.annotations.length;
+		while (nann--) {
+			var ann = cursor.segment.annotations[nann];
+			if (ann.type === Element.STAFF_TEXT) {
+				console.log("D: " + showPos(cursor, measureMap) +
+				    ": removing staff text: " + ann.text);
+				removeElement(ann);
 			}
 		}
 	}
 
 	function labelBeat(cursor, measureMap, doneMap) {
-		//console.log(showPos(cursor, measureMap) + ": " +
+		//console.log("D: " + showPos(cursor, measureMap) + ": " +
 		//    nameElementType(cursor.element.type));
 		if (cursor.element.type !== Element.CHORD)
 			return;
@@ -361,50 +387,58 @@ MuseScore {
 		var t = cursor.segment.tick;
 		if (doneMap[t])
 			return;
-//XXX todo but the annotations are per segment?! test this
-		doneMap[t] = true;
+
 		var m = measureMap[cursor.measure.firstSegment.tick];
-		var text = newElement(Element.STAFF_TEXT);
+		var text = "?";
 		if (m && t >= m.tick && t < m.past) {
 			var b = 1 + (t - m.tick) / m.ticksB;
-			text.text = "" + b;
-		} else {
-			text.text = "?";
+			text = "" + b;
 		}
-
-		if (text.text == "")
+		if (text == "" || text == "?")
 			return;
-		text.text = "qqq\u0001" + cursor.staffIdx + "\u0001" +
-		    cursor.voice + "\u0001" + m.no + "\u0001" + text.text +
-		    "\u0001qzq";
-		text.fontFace = "exportLocationInfo"; //XXX broken during unrolling
-		cursor.add(text);
+		text = "a\u0084" + m.no + "\u0084" + text + "\u0084w";
+
+		var elt = newElement(Element.STAFF_TEXT);
+		elt.text = text;
+		cursor.add(elt);
+		doneMap[t] = true;
 	}
 
-	function analyseBeat(cursor, analyseList) {
+	function analyseBeat(cursor, analyseMap) {
 		if (cursor.element.type !== Element.CHORD)
 			return;
-		var ann;
-		var annn = cursor.segment.annotations.length;
-		while (annn--) {
-			ann = cursor.segment.annotations[annn];
-			if (ann.type !== Element.STAFF_TEXT ||
-			    ann.fontFace !== "exportLocationInfo")
+
+		if (!cursor.segment.annotations)
+			return;
+		var nann = cursor.segment.annotations.length;
+		while (nann--) {
+			var ann = cursor.segment.annotations[nann];
+			if (ann.type !== Element.STAFF_TEXT)
 				continue;
-			var a = ("" + ann.text).split("\u0001");
-			if (a[0] !== "qqq" || a.length != 6 ||
-			    a[5] !== "qzq") {
-				console.log("weird ann: " + ann.text);
+			var a = ("" + ann.text).split("\u0084");
+			if (a.length != 4 || a[0] != "a" || a[3] != "w") {
+				console.log("W: weird ann: " + ann.text +
+				    " :: " + JSON.stringify(a));
 				continue;
 			}
-			analyseList.push({
-				"stave": parseInt(a[1]),
-				"voice": parseInt(a[2]),
-				"measure": parseInt(a[3]),
-				"beat": parseFloat(a[4]),
-				"time": cursor.time
-			});
+			var r = [parseInt(a[1]), parseFloat(a[2])];
+			if (cursor.time in analyseMap) {
+				var d = analyseMap[cursor.time];
+				if (d[0] === r[0] && d[1] === r[1])
+					continue;
+				console.log("E: dup (" + r[0] + ", " + r[1] +
+				    ") at " + cursor.time + ": (" + d[0] +
+				    ", " + d[1] + ")");
+				return (1);
+			}
+			analyseMap[cursor.time] = r;
 		}
+		return (0);
+	}
+
+	onRun: {
+		console.log("I: requesting export path");
+		fileDialogue.open();
 	}
 
 	function analyseScore() {
@@ -415,13 +449,18 @@ MuseScore {
 
 		var measureMap = buildMeasureMap(origScore);
 		var doneMap = {};
-		var analyseList = [];
+		var analyseMap = {};
+		applyToNamedScore(origScore, dropStaveText, measureMap);
 		applyToNamedScore(origScore, labelBeat, measureMap, doneMap);
 
 		cmd("unroll-repeats");
 		newScore = curScore;
-		applyToNamedScore(newScore, analyseBeat, analyseList /*, buildMeasureMap(newScore) */);
+		newScore.startCmd();
+		var abr = applyToNamedScore(newScore, analyseBeat,
+		    analyseMap /*, buildMeasureMap(newScore) */);
 
+		/* close unrolled version and switch back to origScore */
+		newScore.endCmd(true);
 		cmd("file-close");
 		while (true) {
 			newScore = curScore;
@@ -435,51 +474,53 @@ MuseScore {
 			}
 			cmd("next-score");
 		}
+		/* rollback changes */
 		origScore.endCmd(true);
 
-		analyseList.sort(function compareAnalyseList(a, b) {
-			if (a.time === b.time) {
-				if (a.stave === b.stave) {
-					if (a.voice === b.voice) {
-						if (a.measure === b.measure)
-							return (a.beat - b.beat);
-						return (a.measure - b.measure);
-					}
-					return (a.voice - b.voice);
-				}
-				return (a.stave - b.stave);
+		/* aborting from prior error? */
+		if (abr)
+			return;
+
+		var analyseTimes = Array.prototype.map.call(Object.keys(analyseMap),
+		    parseFloat);
+		analyseTimes.sort(function fltSort(a, b) {
+			return (a - b);
+		});
+		var z = analyseTimes.length;
+		var n, t, d, lt = -1, tt, tr;
+		var rt = [];
+		for (n = 0; n < z; ++n) {
+			t = analyseTimes[n];
+			tt = Math.trunc(t);
+			d = analyseMap[t];
+			if (!d || !(tt >= lt)) {
+				console.log("E: analyseMap[t] bad or empty: " + d);
+				console.log("N: " + JSON.stringify({
+					"n": n, "t": t, "tt": tt, "lt": lt,
+				}));
+				console.log("N: analyseMap=" + JSON.stringify(analyseMap));
+				console.log("N: analyseTimes=" + JSON.stringify(analyseTimes));
+				return;
 			}
-			return (a.time - b.time);
+			tr = [(tt > lt ? tt : t) / 1000.0, d[0], d[1]];
+			lt = tt;
+			rt.push(tr);
+		}
+
+		var measureList = measureMap["list"].map(function (cur) {
+			return ([cur.tsN, cur.tsD]);
 		});
 
-		var maxH = Math.trunc(origScore.duration / 3600);
-		maxH = maxH > 9 ? maxH : 10;
-		maxH = (""+maxH).replace(/./, "0");
-		var maxL = -(maxH.length);
-		var outLen = analyseList.length;
-		for (var i = 0; i < outLen; ++i) {
-			var a = analyseList[i];
-			var h, m, s, c;
-			c = Math.trunc(a.time);
-			s = Math.trunc(c / 1000);
-			c = c % 1000;
-			m = Math.trunc(s / 60);
-			s = s % 60;
-			h = Math.trunc(m / 60);
-			m = m % 60;
-			analyseList[i] = (maxH + m).slice(maxL) + ":" +
-			    ("0" + m).slice(-2) + ":" +
-			    ("0" + s).slice(-2) + "." +
-			    ("00" + c).slice(-3) +
-			    " stave " + a.stave + " voice " + a.voice +
-			    " measure " + a.measure + " beat " + a.beat;
-		}
-		console.log("I: writing to " + outfile.source)
-		outfile.write(analyseList.join("\n"));
-	}
+		var result = {
+			"measures": measureList,
+			"time-positions": rt,
+		};
 
-	onRun: {
-		console.log("I: requesting export path");
-		fileDialog.open();
+		outfile.source = ("" + fileDialogue.fileUrl).slice(7) +
+		    "/" + origScore.scoreName + ".locinfo.jsn";
+		outfile.write(JSON.stringify(result) + "\n");
+		console.log("I: written to " + outfile.source);
+		resultBox.icon = StandardIcon.Information;
+		resultBox.text = "Written to " + outfile.source;
 	}
 }

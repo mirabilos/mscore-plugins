@@ -16,9 +16,29 @@ will be available as _mu͒4 symlink (or changed copy).
   ‣ https://musescore.org/en/project/count-notes-beats-each-measure
   ‣ https://musescore.com/groups/musescore-cafe/discuss/5076457
 
-• export-location-info.qml
+• export-location-info-phys.qml
 
   Prototype, not yet ready for public consumption.
+
+  Ask user for a directory to store a file (score basename + ".locinfo.jsn")
+  as JSON into. Unroll repeats, enumerate which playback time corresponds to
+  which score position, save that. Format:
+
+  { "measures": Array[measure-info], "time-positions": Array[tp-info] }
+
+  measure-info: Array(timesig-numerator, timesig-denominator)
+  tp-info: Array(ts, phys-measure-no, beat-no)
+  timesig-numerator: integer
+  timesig-denominator: integer
+  ts: number (integer or float), seconds into the (unrolled) playback
+  phys-measure-no: integer, index into measure-info-list, 0-based
+  beat-no: number (integer or float), 1-based
+
+  Concept physical measure number: each numbered measure (start at 0,
+  increasing by 1 for each) exactly corresponds to a <Measure> in XML
+  ignoring the irregular flag and user measure no adjustment and a
+  split measure counts once for each split part, beats starting from
+  1 always for each physical measure, section breaks don’t restart.
 
 • notenames-as-lyrics_mu͒*.qml
 
