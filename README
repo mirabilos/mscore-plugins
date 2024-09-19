@@ -4,8 +4,11 @@
 
 Use at your own discretion / risk and see inside the files for the licence.
 
-The _mu͒3 files may work under Mu͒seScore 4; once tested, versions
-will be available as _mu͒4 symlink (or changed copy).
+The _mu͒4 variants are effectively contributed and maintained by users,
+as I don’t use MuseScore Studio 4, for a variety of reasons already
+well-documented in several sites. Its plugin API seems to be undergoing
+several incompatible changes, so please do contribute issue reports and
+fixes and tests.
 
 • count-note-beats_mu͒*.qml
 
