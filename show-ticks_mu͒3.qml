@@ -32,9 +32,10 @@ MuseScore {
 	menuPath: "Plugins.Show ticks";
 
 	id: showTicks
+	//4.4 title: "Show ticks"
 	Component.onCompleted: {
 		// runs once before console.log is ready
-		if (mscoreMajorVersion >= 4) {
+		if (mscoreMajorVersion == 4 && mscoreMinorVersion <= 3) {
 			showTicks.title = "Show ticks";
 		}
 	}

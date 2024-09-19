@@ -35,9 +35,10 @@ MuseScore {
 	menuPath: "Plugins.Notes.Count note beats";
 
 	id: countNoteBeats
+	//4.4 title: "Count note beats"
 	Component.onCompleted: {
 		// runs once before console.log is ready
-		if (mscoreMajorVersion >= 4) {
+		if (mscoreMajorVersion == 4 && mscoreMinorVersion <= 3) {
 			countNoteBeats.title = "Count note beats";
 		}
 	}

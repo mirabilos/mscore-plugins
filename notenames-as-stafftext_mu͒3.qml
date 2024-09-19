@@ -33,9 +33,10 @@ MuseScore {
 	menuPath: "Plugins.Notes.Note Names as Staff Text";
 
 	id: notenamesAsStafftext
+	//4.4 title: "SPN note names as stafftext"
 	Component.onCompleted: {
 		// runs once before console.log is ready
-		if (mscoreMajorVersion >= 4) {
+		if (mscoreMajorVersion == 4 && mscoreMinorVersion <= 3) {
 			notenamesAsStafftext.title = "SPN note names as stafftext";
 		}
 	}

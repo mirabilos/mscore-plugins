@@ -33,9 +33,10 @@ MuseScore {
 	menuPath: "Plugins.Notes.Note Names as Lyrics";
 
 	id: notenamesAsLyrics
+	//4.4 title: "SPN note names as lyrics"
 	Component.onCompleted: {
 		// runs once before console.log is ready
-		if (mscoreMajorVersion >= 4) {
+		if (mscoreMajorVersion == 4 && mscoreMinorVersion <= 3) {
 			notenamesAsLyrics.title = "SPN note names as lyrics";
 		}
 	}
